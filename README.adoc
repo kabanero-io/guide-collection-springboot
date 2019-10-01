@@ -7,6 +7,7 @@ permalink: /guides/collection-springboot2/
 :page-description: Explore how to use the Spring Boot Kabanero Collection and Appsody CLI to create, run, update, deploy, and deliver cloud native microservices.
 :guide-author: Kabanero
 :page-tags: ['Java', 'Spring Boot', 'Spring', 'Tomcat', 'Collection']
+:page-guide-category: collections
 = Developing cloud native microservices with the Spring Boot Collection and Appsody CLI
 
 // Copyright 2019 IBM Corporation and others.
