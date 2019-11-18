@@ -120,7 +120,9 @@ incubator  https://github.com/appsody/stacks/releases/latest/download/incubator-
 ----
 
 *Recommendation*: In enterprise settings, when a solution architect creates application stacks with
-technology choices that are in a private Collection Hub, it's best to remove `incubator` from the list:
+technology choices that are in a private Collection Hub, it's best to remove `incubator` from the list.
+These Appsody stacks are not supported by the Kabanero application cluster. Run the following command
+to remove the `incubator` repository:
 
 [role="command"]
 ----
