@@ -10,7 +10,7 @@ permalink: /guides/collection-springboot2/
 :page-guide-category: collections
 = Developing cloud native microservices with the Kabanero Spring Boot Collection and Appsody CLI
 
-// Copyright 2019 IBM Corporation and others.
+// Copyright 2019, 2020 IBM Corporation and others.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ Other options include link:https://www.okd.io/minishift/[Minishift] or link:http
 you make a private copy of the Kabanero Collection Hub and use it in the same way. However, this demonstration does
 not require that you make your own copy.
 
-Add your Kabanero index to the Appsody CLI. The following example uses the public index for Kabanero Version 0.2.1.
+Add your Kabanero index to the Appsody CLI. The following example uses the public index for Kabanero Version 0.5.0.
 
 To check the repositories that Appsody can already access, run the following command:
 [role="command"]
@@ -94,7 +94,7 @@ NAME        URL
 Next, run the following command to add the Kabanero index:
 [role="command"]
 ----
-appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
 ----
 
 Check the repositories again by running `appsody repo list` to see that the Kabanero repository was added:
@@ -102,7 +102,7 @@ Check the repositories again by running `appsody repo list` to see that the Kaba
 ----
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero    https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
+kabanero    https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
 ----
 
 In this example, the asterisk (*) shows that `incubator` is the default repository. Run the following command to set the Kabanero index as the default repository:
@@ -116,7 +116,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ----
 NAME        URL
 incubator  https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero   https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
+*kabanero   https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
 ----
 
 *Recommendation*: In enterprise settings, when a solution architect creates application stacks with
@@ -134,7 +134,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 [source, role='no_copy']
 ----
 NAME     	URL
-*kabanero	https://github.com/kabanero-io/collections/releases/download/0.2.1/kabanero-index.yaml
+*kabanero	https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
 ----
 
 Your Appsody CLI is now configured to use the Kabanero Collections. Next, you need to initialize your project.
@@ -162,7 +162,7 @@ The output from the command varies depending on whether you have an installation
 [source, role='no_copy']
 ----
 Running appsody init...
-Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.2.1/incubator.java-spring-boot2.v0.3.9.templates.default.tar.gz
+Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.5.0/incubator.java-spring-boot2.v0.3.9.templates.default.tar.gz
 Download complete. Extracting files from java-spring-boot2.tar.gz
 Setting up the development environment
 Running command: docker[pull kabanero/java-spring-boot2:0.3]
