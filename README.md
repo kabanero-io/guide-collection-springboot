@@ -1,166 +1,167 @@
 ---
 permalink: /guides/collection-springboot2/
+layout: guide-markdown
+title: Developing cloud native microservices with the Spring Boot application stack
+duration: 40 minutes
+releasedate: 2020-01-27
+description: Explore how to use the Spring Boot application stack to create, run, update, deploy, and deliver cloud native microservices.
+tags: ['Java', 'Spring Boot', 'Spring', 'Tomcat', 'Collection']
+guide-category: collections
 ---
-:page-layout: guide
-:page-duration: 40 minutes
-:page-releasedate: 2019-09-16
-:page-description: Explore how to use the Spring Boot Kabanero Collection and Appsody CLI to create, run, update, deploy, and deliver cloud native microservices.
-:guide-author: Kabanero
-:page-tags: ['Java', 'Spring Boot', 'Spring', 'Tomcat', 'Collection']
-:page-guide-category: collections
-= Developing cloud native microservices with the Kabanero Spring Boot Collection and Appsody CLI
+<!-- Note:
+> This repository contains the guide documentation source. To view
+> the guide in published form, view it on the [website](https://kabanero.io/guides/{projectid}.html).
+-->
 
-// Copyright 2019, 2020 IBM Corporation and others.
+<!--
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//	Copyright 2019, 2020 IBM Corporation and others.
 //
-// http://www.apache.org/licenses/LICENSE-2.0
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
+//
+-->
 
+<!--
+// =================================================================================================
+// What you'll learn
+// =================================================================================================
+-->
 
-[.hidden]
-NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://kabanero.io/guides/{projectid}.html[website].
+## What you'll learn
 
-Explore how to use the Kabanero Spring Boot Collection and Appsody CLI to create, run, update, deploy, and deliver cloud native microservices.
+In this guide, you’ll learn how to create and run a simple cloud native microservice based on the Spring Boot application stack. You’ll learn how to configure your development environment, update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
 
-== What you'll learn
+The Spring Boot application stack enables the development and optimization of microservices. With application stacks, developers don’t need to manage full software development stacks or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices.
 
-You’ll learn how to create and run a simple cloud native microservice. Then, you’ll update the microservice that you created and deploy it to
-Kubernetes or Knative. This process will be done by using the Kabanero Spring Boot Collection with the link:https://appsody.dev/docs/using-appsody/cli-commands[Appsody CLI].
-Deployment to Knative is optional depending on whether you want to Scale to Zero.
+Applications in this guide are written based on the Spring Boot API specifications, built and run with [Apache Tomcat](http://tomcat.apache.org/), and deployed to Kubernetes through a modern DevOps toolchain that is triggered in Git.
 
-Kabanero’s Spring Boot Collection provides an application stack that enables the development and optimization of microservices.
-With application stacks, developers don’t need to manage full software development stacks or be experts on underlying container
-technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards
-and technology choices.
-
-Applications in this guide are written based on the Spring Boot API specifications, built and run with link:http://tomcat.apache.org/[Apache
-Tomcat], and deployed to Kubernetes through a modern DevOps toolchain that is triggered in Git.
-
+<!--
 // =================================================================================================
 // Prerequisites
 // =================================================================================================
+-->
 
-== Prerequisites
+## Prerequisites
 
-. https://docs.docker.com/get-started/[Docker] must be installed.
-. https://appsody.dev/docs/getting-started/installation[Appsody] must be installed.
-. *Optional:* If you have a repository that contains a set of custom collections, you need the URL for the `index.yaml` file. Use this URL
-to make your custom collections available with the Appsody CLI.
-. *Optional*: If you are testing multiple microservices together, you must have access to a local Kubernetes cluster for local development.
-If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*.
-Other options include link:https://www.okd.io/minishift/[Minishift] or link:https://kubernetes.io/docs/setup/learning-environment/minikube/[Minikube].
+- [Docker](https://docs.docker.com/get-started/) must be installed.
+- [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
+- *Optional:* If your organisation has customized application stacks, you need the URL that points to the `index.yaml` configuration file.
+- *Optional*: If you are testing multiple microservices together, you must have access to a local Kubernetes cluster for local development.
+If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*. Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/). If you want to use remote cluster development, use Codewind.
 
-
+<!--
 // =================================================================================================
 // Getting started
 // =================================================================================================
+-->
 
-== Getting started
+## Getting started
 
+<!--
 // =================================================================================================
-// Configuring Appsody
+// Configuring your development environment
 // =================================================================================================
+-->
 
-=== *Configuring Appsody*
+### Configuring your development environment
 
-*Note:* The use of the public Kabanero Collection Hub is only for the purposes of this guide. It is recommended that
-you make a private copy of the Kabanero Collection Hub and use it in the same way. However, this demonstration does
-not require that you make your own copy.
+To check the repositories that you can already access, run the following command:
 
-Add your Kabanero index to the Appsody CLI. The following example uses the public index for Kabanero Version 0.5.0.
-
-To check the repositories that Appsody can already access, run the following command:
-[role="command"]
-----
+```shell
 appsody repo list
-----
+```
 
 You see output similar to the following example:
-[source, role='no_copy']
-----
+
+```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-----
+```
 
-Next, run the following command to add the Kabanero index:
-[role="command"]
-----
-appsody repo add kabanero https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
-----
+Next, run the following command to add the URL for your stack configuration file:
 
-Check the repositories again by running `appsody repo list` to see that the Kabanero repository was added:
-[source, role='no_copy']
-----
+```shell
+appsody repo add <my-org-stack> <URL>
+```
+
+where `<my-org-stack>` is the repository name for your stack hub and `<URL>` is the URL for
+your stack hub index file.
+
+**Note:** If you do not have a stack hub that contains customized, pre-configured application stacks, you can skip to
+[Initializing your project](#initializing-your-project) and develop your app based on the public application stack
+for Spring Boot.
+
+Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the following examples, the stack hub is called `abc-stacks` and the URL is `https://github.com/abc.inc/stacks/index.yaml`:
+
+```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero    https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
-----
+abc-stacks https://github.com/abc.inc/stacks/index.yaml
+```
 
-In this example, the asterisk (*) shows that `incubator` is the default repository. Run the following command to set the Kabanero index as the default repository:
-[role="command"]
-----
-appsody repo set-default kabanero
-----
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `abc-stacks` as the default repository:
+
+```shell
+appsody repo set-default abc-stacks
+```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
-[source, role='no_copy']
-----
+
+```shell
 NAME        URL
-incubator  https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero   https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
-----
+incubator   https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+```
 
-*Recommendation*: In enterprise settings, when a solution architect creates application stacks with
-technology choices that are in a private Collection Hub, it's best to remove `incubator` from the list.
-These Appsody stacks are not supported by the Kabanero application cluster. Run the following command
-to remove the `incubator` repository:
+**Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
 
-[role="command"]
-----
+```shell
 appsody repo remove incubator
-----
+```
 
 Check the available repositories again by running `appsody repo list` to see that `incubator` is removed:
 
-[source, role='no_copy']
-----
-NAME     	URL
-*kabanero	https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
-----
+```shell
+NAME        URL
+*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+```
 
-Your Appsody CLI is now configured to use the Kabanero Collections. Next, you need to initialize your project.
+Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
 
+<!--
 // =================================================================================================
 // Initializing your project
 // =================================================================================================
+-->
 
-=== *Initializing your project*
+### Initializing your project
 
 First, create a directory that will contain the project:
-[role="command"]
-----
+
+```shell
 mkdir -p ~/projects/simple-spring-boot2
 cd ~/projects/simple-spring-boot2
-----
+```
 
-Run the following command to initialize your Spring Boot project with the Appsody CLI:
-[role="command"]
-----
+Run the following command to initialize your Spring Boot project:
+
+```shell
 appsody init java-spring-boot2
-----
+```
 
 The output from the command varies depending on whether you have an installation of Java on your system. The following output is from a system that has Java installed:
-[source, role='no_copy']
-----
+
+```shell
 Running appsody init...
 Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.5.0/incubator.java-spring-boot2.v0.3.9.templates.default.tar.gz
 Download complete. Extracting files from java-spring-boot2.tar.gz
@@ -174,71 +175,72 @@ Running command: docker[rm my-project-extract -f]
 Project extracted to /home/username/projects/simple-spring-boot2/.appsody_init
 Running command: ./.appsody-init.sh[]
 Successfully initialized Appsody project
-----
+```
 
 Your project is now initialized.
 
+<!--
 // =================================================================================================
 // Understanding the project layout
 // =================================================================================================
+-->
 
-=== *Understanding the project layout*
+### Understanding the project layout
 
 For context, the following image displays the structure of the project that you’re working on:
 
-image::/img/guide/collection-springboot2-spring-files.png[link="/img/guide/collection-springboot2-spring-files.png" alt="Project structure"]
-
+![Project structure](/img/guide/collection-springboot2-spring-files.png)
 
 This project contains the following artifacts:
 
-* `pom.xml`, the project build file
-* `LivenessEndpoint.java`, an example Liveness Endpoint
-* `Main.java`, a Spring Application class
-* `application.properties`, containing some configuration options for Spring
-* `index.html`, a static file
-* `MainTests.java`, a simple test class
+- `pom.xml`, the project build file
+- `LivenessEndpoint.java`, an example Liveness Endpoint
+- `Main.java`, a Spring Application class
+- `application.properties`, containing some configuration options for Spring
+- `index.html`, a static file
+- `MainTests.java`, a simple test class
 
-
+<!--
 // =================================================================================================
-// Running the Appsody development environment
+// Running the development environment
 // =================================================================================================
+-->
 
-== Running the Appsody development environment
+## Running the development environment
 
-Run the following command to start the Appsody development environment:
-[role="command"]
-----
+Run the following command to start the development environment:
+
+```shell
 appsody run
-----
+```
 
-The Appsody CLI launches a local Docker image that contains an Apache Tomcat server that hosts the microservice.
-After some time, you see a message similar to the following example:
+The CLI launches a local Docker image that contains an Apache Tomcat server that hosts the microservice. After some time, you see a message similar to the following example:
 
-[source, role='no_copy']
-----
+```shell
 [Container] 2019-09-12 17:28:44.066  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
 [Container] 2019-09-12 17:28:44.205  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 [Container] 2019-09-12 17:28:44.209  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 6.051 seconds (JVM running for 6.923)
-----
+```
 
-This message indicates that the Tomcat server is started. Browse to http://localhost:8080 and you can see the Appsody splash screen.
+This message indicates that the Tomcat server is started. Browse to `http://localhost:8080` and you can see the splash screen.
 
-image::/img/guide/collection-springboot2-splashscreen.png[link="/img/guide/collection-springboot2-splashscreens.png" alt="Browser showing Appsody splash screen"]
+![Browser showing splash screen](/img/guide/collection-springboot2-splashscreen.png)
 
 You are now ready to begin developing your application.
 
+<!--
 // =================================================================================================
 // Creating and updating the application
 // =================================================================================================
+-->
 
-==  Creating and updating the application
+## Creating and updating the application
 
 In this example, you will create a new REST endpoint and add it to the application.
 
 Create an `ExampleEndpoint.java` class in the `src/main/java/application` directory. Open the file, add the following code, and save it:
 
-[source,java]
-----
+```java
 package application;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -252,12 +254,11 @@ public class ExampleEndpoint {
         return "This is an example";
     }
 }
-----
+```
 
 After you save, the source compiles and the application updates. You see messages similar to the following example:
 
-[source, role='no_copy']
-----
+```shell
 [Container] Running: /project/java-spring-boot2-build.sh recompile
 [Container] Compile project in the foreground
 [Container] > mvn compile
@@ -299,20 +300,21 @@ After you save, the source compiles and the application updates. You see message
 [Container] 2019-09-12 17:34:39.772  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 [Container] 2019-09-12 17:34:39.773  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 1.403 seconds (JVM running for 362.487)
 [Container] 2019-09-12 17:34:39.788  INFO 171 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-----
+```
 
-If you browse to the http://localhost:8080/example URL, the endpoint response is displayed, as shown in the following image:
+If you browse to the `http://localhost:8080/example` URL, the endpoint response is displayed, as shown in the following image:
 
-image::/img/guide/collection-springboot2-example.png[link="/img/guide/collection-springboot2-example.png" alt="Browser showing example endpoint"]
-
+![Browser showing example endpoint](/img/guide/collection-springboot2-example.png[)
 
 Try changing the message in the `ExampleEndpoint.java` file, then save and refresh the page. You'll see that it takes only a few seconds for the change to take effect.
 
+<!--
 // =================================================================================================
 // Testing the application
 // =================================================================================================
+-->
 
-== Testing the application
+## Testing the application
 
 If you are building an application that is composed of microservices, you need to test within the context of the overall system. First, test your application and perform unit testing in isolation. To test the application as part of the system, deploy the system and then the new application.
 
@@ -320,65 +322,73 @@ You can choose how you want to deploy the system and application. If you have ad
 
 You can also deploy the system, application, and the associated services in a private namespace on a development cluster. From this private namespace, you can commit the microservices in Git repositories and deploy them through a DevOps pipeline, not directly to Kubernetes.
 
-=== Testing locally on Kubernetes
+<!--
+// =================================================================================================
+// Testing locally on Kubernetes
+// =================================================================================================
+-->
 
-After you finish writing your application code, the Appsody CLI makes it easy to deploy directly to a Kubernetes cluster for further local testing.
-The ability to deploy directly to a Kubernetes cluster is valuable when you want to test multiple microservices together or test with services that the application requires.
+### Testing locally on Kubernetes
+
+After you finish writing your application code, the CLI makes it easy to deploy directly to a Kubernetes cluster for further local testing. The ability to deploy directly to a Kubernetes cluster is valuable when you want to test multiple microservices together or test with services that the application requires.
 
 Ensure that your `kubectl` command is configured with cluster details and run the following command to deploy the application:
-[role="command"]
-----
+
+```shell
 appsody deploy
-----
+```
 
-This command builds a new Docker image that is optimized for production deployment and deploys the image to your local Kubernetes cluster.
-After some time you see a message similar to the following example:
+This command builds a new Docker image that is optimized for production deployment and deploys the image to your local Kubernetes cluster. After some time you see a message similar to the following example:
 
-[source, role='no_copy']
-----
+```shell
 Deployed project running at http://localhost:30262
-----
+```
 
 Run the following command to check the status of the application pods:
-[role="command"]
-----
+
+```shell
 kubectl get pods
-----
+```
 
 In the following example output, you can see that a `simple-spring-boot2` pod is running:
-[source, role='no_copy']
-----
+
+```shell
 NAME                                   READY   STATUS    RESTARTS   AGE
 appsody-operator-859b97bb98-xm8nl      1/1     Running   1          8d
 simple-spring-boot2-77d6868765-bhd8x   1/1     Running   0          3m21s
-----
+```
 
-After the `simple-spring-boot2` pod starts, go to the URL that was returned when you ran the `appsody deploy` command,
-and you see the Appsody microservice splash screen. To see the response from your application, point your browser to
-the `<URL_STRING>/example` URL, where `<URL_STRING>` is the URL that was returned. For example, http://localhost:30262
-was returned in the previous example. Go to the http://localhost:30262/example URL to see the deployed application response.
+After the `simple-spring-boot2` pod starts, go to the URL that was returned when you ran the `appsody deploy` command, and you see the splash screen. To see the response from your application, point your browser to the `<URL_STRING>/example` URL, where `<URL_STRING>` is the URL that was returned. For example, `http://localhost:30262` was returned in the previous example. Go to the `http://localhost:30262/example` URL to see the deployed application response.
 
 Use the following command to stop the deployed application:
-[role="command"]
-----
+
+```shell
 appsody deploy delete
-----
+```
 
 After you run this command and the deployment is deleted, you see the following message:
-[source, role='no_copy']
-----
+
+```shell
 Deployment deleted
-----
+```
 
-=== Testing with Knative serving
+<!--
+// =================================================================================================
+// Testing with serverless
+// =================================================================================================
+-->
 
-You can choose to test an application that is deployed with Knative Serving to take advantage of Scale to Zero. Not all applications can be written to effectively take advantage of Scale to Zero. The Kabanero operator-based installation configures Knative on the Kubernetes cluster, specifically OKD 3.11. Because of the resources that are required to run Knative and its dependencies, testing locally can be difficult. Publish to Kubernetes by using pipelines that are described later in the guide. Your operations team can configure the pipelines so that Knative Serving is enabled for deployment.
+### Testing with serverless
 
+You can choose to test an application that is deployed with serverless to take advantage of Scale to Zero. Not all applications can be written to effectively take advantage of Scale to Zero. The Kabanero operator-based installation configures serverless on the Kubernetes cluster. Because of the resources that are required to run serverless and its dependencies, testing locally can be difficult. Publish to Kubernetes by using pipelines that are described later in the guide. Your operations team can configure the pipelines so that serverless is enabled for deployment.
+
+<!--
 // =================================================================================================
 // Publishing to Kubernetes by using pipelines
 // =================================================================================================
+-->
 
-== Publishing to Kubernetes by using pipelines
+## Publishing to Kubernetes by using pipelines
 
 After you develop and test your application in your local environment, it’s time to publish it to your enterprise’s pipeline. From your enterprise’s pipeline, you can deploy the application to the appropriate Kubernetes cluster for staging or production. Complete this process in Git.
 
