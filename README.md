@@ -101,18 +101,18 @@ your stack hub index file.
 [Initializing your project](#initializing-your-project) and develop your app based on the public application stack
 for Spring Boot.
 
-Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the following examples, the stack hub is called `abc-stacks` and the URL is `https://github.com/abc.inc/stacks/index.yaml`:
+Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the following examples, the stack hub is called `acme-stacks` and the URL is `https://github.com/acme.inc/stacks/index.yaml`:
 
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-abc-stacks https://github.com/abc.inc/stacks/index.yaml
+acme-stacks https://github.com/acme.inc/stacks/index.yaml
 ```
 
-In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `abc-stacks` as the default repository:
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `acme-stacks` as the default repository:
 
 ```shell
-appsody repo set-default abc-stacks
+appsody repo set-default acme-stacks
 ```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
@@ -120,7 +120,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator   https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+*acme-stacks https://github.com/acme.inc/stacks/index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
@@ -133,7 +133,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+*acme-stacks https://github.com/acme.inc/stacks/index.yaml
 ```
 
 Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
